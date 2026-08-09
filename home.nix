@@ -16,5 +16,9 @@
 			fi
 		'';
 	};
+	programs.git = {
+		userName = "ShalamarII";
+		userEmail = "hitmanlee3@gmail.com";
+	};
 }
 
