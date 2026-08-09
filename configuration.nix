@@ -2,7 +2,7 @@
 # your system. Help is available in the configuration.nix(5) man page, on
 # https://search.nixos.org/options and in the NixOS manual (`nixos-help`).
 
-{ config, lib, pkgs, ... }:
+{ config, lib, pkgs, inputs, ... }:
 
 {
   imports =
@@ -10,8 +10,16 @@
       ./hardware-configuration.nix
     ];
 
-  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.enable = false;
   boot.loader.efi.canTouchEfiVariables = true;
+  boot.supportedFilesystems = ["ntfs"];
+  boot.loader.grub = {
+	enable=true;
+	version = 2;
+	device = "nodev";
+	efiSupport = true;
+	useOSProber = true;
+  };
 
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
@@ -48,7 +56,7 @@
 
   # List packages installed in system profile.
   # You can use https://search.nixos.org/ to find more packages (and options).
-  environment.systemPackages = with pkgs; [
+    environment.systemPackages = with pkgs; [
  	vim
   	wget
 	zsh
@@ -56,6 +64,8 @@
 	kitty
 	waybar
 	hyprpaper
+	inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.default
+	pkgs.godot
   ];
 
   services.openssh.enable = true;
